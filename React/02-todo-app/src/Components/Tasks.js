@@ -3,22 +3,22 @@ import TaskItem from "./TaskItem";
 import "./Tasks.css";
 
 const Tasks = (props) => {
-  return (
-    <div className="tasks">
+
+  let taskContent = <p>No tasks found</p>;
+
+  if (props.items.length > 0) {
+    taskContent = props.items.map((task) => (
       <TaskItem
-        description={props.items[0].description}
-        status={props.items[0].status}
+        key={task.id}
+        id={task.id}
+        description={task.description}
+        status={task.status}
+        onRemove={props.onRemoveTask}
       />
-      <TaskItem
-        description={props.items[1].description}
-        status={props.items[1].status}
-      />
-      <TaskItem
-        description={props.items[2].description}
-        status={props.items[2].status}
-      />
-    </div>
-  );
+    ));
+  }
+
+  return <div className="tasks">{taskContent}</div>;
 };
 
 export default Tasks;
