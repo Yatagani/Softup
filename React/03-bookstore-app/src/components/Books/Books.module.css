@@ -1,0 +1,8 @@
+.booksContainer {
+  display: grid;
+  background-color: white;
+  grid-template-columns: repeat(5, 1fr);
+  justify-items: center;
+  padding: 1rem;
+  row-gap: 2rem;
+}

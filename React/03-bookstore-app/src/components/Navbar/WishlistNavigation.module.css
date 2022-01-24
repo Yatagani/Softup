@@ -1,0 +1,11 @@
+.container {
+  text-decoration: none;
+  display: block;
+  padding: 1em;
+  color: white;
+  border-left: 1px solid rgb(255, 255, 255);
+}
+
+.container:hover {
+  background: #1565c0;
+}
