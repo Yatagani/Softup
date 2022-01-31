@@ -6,3 +6,22 @@
   padding: 1rem;
   row-gap: 2rem;
 }
+
+.booksLoading {
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10rem;
+}
+
+.booksLoading p {
+  font-size: 24px;
+}
+
+.booksError p{
+  font-size: 24px;
+  text-align: center;
+  margin: 10rem;
+  color: red;
+}

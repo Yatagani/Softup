@@ -1,34 +1,24 @@
-import { useContext, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { uiActions } from "../../store/ui-slice";
 
 import CartIcon from "../Cart/CartIcon";
-// import CartContext from "../../store/cart-context";
-import BookContext from "../../store/book-context";
 import classes from "./HeaderCartButton.module.css";
 
 const HeaderCartButton = (props) => {
-  const bookCtx = useContext(BookContext);
+  const totalQuantity = useSelector((state) => state.cart.totalQuantity);
+  const dispatch = useDispatch();
 
-  // console.log(bookCtx.cart);
-
-  const { items } = bookCtx.cart;
-
-  const numberOfCartItems = items.reduce((curNumber, item) => {
-    return curNumber + item.amount;
-  }, 0);
-
-  useEffect(() => {
-    if (items.length === 0) {
-      return;
-    }
-  }, [items]);
+  const showCartHandler = () => {
+    dispatch(uiActions.toggleCart());
+  };
 
   return (
-    <button className={classes.button} onClick={props.onClick}>
+    <button className={classes.button} onClick={showCartHandler}>
       <span className={classes.icon}>
         <CartIcon />
       </span>
       <span>Cart</span>
-      <span className={classes.badge}>{numberOfCartItems}</span>
+      <span className={classes.badge}>{totalQuantity}</span>
     </button>
   );
 };

@@ -1,52 +1,53 @@
-import { useContext } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { uiActions } from "../../store/ui-slice";
+import { sendCartData } from "../../store/http-actions";
 
 import Modal from "../UI/Modal";
 import CartItem from "./CartItem";
 import classes from "./Cart.module.css";
-// import CartContext from "../../store/cart-context";
-import BookContext from "../../store/book-context";
 
 const Cart = (props) => {
-  const bookCtx = useContext(BookContext);
+  const totalAmount = useSelector((state) => state.cart.totalAmount);
+  const totalQuantity = useSelector((state) => state.cart.totalQuantity);
+  const cartItems = useSelector((state) => state.cart.items);
+  const dispatch = useDispatch();
 
-  const totalAmount = `ALL ${bookCtx.cart.totalAmount}`;
-  const hasItems = bookCtx.cart.items.length > 0;
-
-  const cartItemRemoveHandler = (id) => {
-    bookCtx.cart.removeItem(id);
+  const closeCartHandler = () => {
+    dispatch(uiActions.toggleCart());
   };
 
-  const cartItemAddHandler = (item) => {
-    bookCtx.cart.addItem({ ...item, amount: 1 });
-  };
+  const orderHandler = () => {
+    console.log("Ordered pressed");
 
-  const cartItems = (
-    <ul className={classes["cart-items"]}>
-      {bookCtx.cart.items.map((item) => (
-        <CartItem
-          key={item.id}
-          title={item.title}
-          amount={item.amount}
-          price={item.price}
-          onRemove={cartItemRemoveHandler.bind(null, item.id)}
-          onAdd={cartItemAddHandler.bind(null, item)}
-        />
-      ))}
-    </ul>
-  );
+    dispatch(sendCartData({ totalAmount, totalQuantity, items: cartItems }));
+  };
 
   return (
-    <Modal onClose={props.onCloseCart}>
-      {cartItems}
+    <Modal onClose={closeCartHandler}>
+      <ul className={classes["cart-items"]}>
+        {cartItems.map((item) => (
+          <CartItem
+            key={item.id}
+            item={{
+              id: item.id,
+              title: item.title,
+              amount: item.amount,
+              price: item.price,
+            }}
+          />
+        ))}
+      </ul>
       <div className={classes.total}>
         <span>Total Amount</span>
         <span>{totalAmount}</span>
       </div>
       <div className={classes.actions}>
-        <button className={classes["button--alt"]} onClick={props.onCloseCart}>
+        <button className={classes["button--alt"]} onClick={closeCartHandler}>
           Close
         </button>
-        {hasItems && <button className={classes.button}>Order</button>}
+        <button className={classes.button} onClick={orderHandler}>
+          Order
+        </button>
       </div>
     </Modal>
   );

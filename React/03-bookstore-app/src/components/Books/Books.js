@@ -1,21 +1,31 @@
-import jsonData from "../../assets/jsonData.json";
+import { useSelector } from "react-redux";
+
 import BookItem from "./BookItem";
 import classes from "./Books.module.css";
 
-const booksList = jsonData.map((book) => (
-  <BookItem
-  key={book.link}
-  id={book.link}
-  title={book.title}
-  author={book.author}
-  price={book.pages}
-  image={book.imageLink}
-  category={book.language}
-  />
-  ));
-
 const Books = () => {
-  return <div className={classes.booksContainer}>{booksList}</div>;
+  const bookItems = useSelector((state) => state.book.items);
+  const category = useSelector((state) => state.book.category);
+
+  return (
+    <div className={classes.booksContainer}>
+      {bookItems
+        .filter((item) => item.category === category)
+        .map((book) => (
+          <BookItem
+            key={book.id}
+            item={{
+              id: book.id,
+              title: book.title,
+              author: book.author,
+              price: book.price,
+              image: book.image,
+              category: book.category,
+            }}
+          />
+        ))}
+    </div>
+  );
 };
 
 export default Books;

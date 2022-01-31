@@ -1,53 +1,62 @@
-import { useContext, useState } from "react";
-
-import BookItemForm from "./BookItemForm";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { cartActions } from "../../store/cart-slice";
+import { wishlistActions } from "../../store/wishlist-slice";
 import classes from "./BookItem.module.css";
-// import CartContext from "../../store/cart-context";
-import BookContext from "../../store/book-context";
 
 const BookItem = (props) => {
-  const imagePath = require(`../../assets/${props.image}`);
-  const bookCtx = useContext(BookContext);
-  const price = `ALL ${props.price}`;
-  const [isPressed, setisPressed] = useState(false);
+  const [amountValue, setAmountValue] = useState(1);
+  const dispatch = useDispatch();
 
-  const addToCartHandler = (amount) => {
-    bookCtx.cart.addItem({
-      id: props.id,
-      title: props.title,
-      amount: amount,
-      price: props.price,
-    });
+  const { title, author, price, image, id } = props.item;
+  const [isLiked, setIsLiked] = useState(false);
+
+  const amountHandler = (event) => {
+    setAmountValue(event.target.value);
   };
 
-  const addToWishlistHandler = () => {
-    console.log(isPressed);
+  const addToCartHandler = () => {
+    dispatch(
+      cartActions.addItemToCart({
+        id,
+        title,
+        amount: amountValue,
+        price,
+      })
+    );
+  };
 
-    if (!isPressed) {
-      bookCtx.wishlist.addItem({
-        id: props.id,
-        title: props.title,
-      });
-      setisPressed(true);
-    } else {
-      bookCtx.wishlist.removeItem(props.id);
-      setisPressed(false);
-    }
+  const wishlistHandler = () => {
+    dispatch(
+      wishlistActions.manageWishlistItem({
+        id,
+        title,
+        author,
+        image,
+      })
+    );
+    setIsLiked(!isLiked);
   };
 
   return (
     <div className={classes.container}>
-      <div>
-        <img className={classes.image} src={imagePath} alt="random_img"></img>
-        <h3>{props.title}</h3>
-        <div className={classes.author}>{props.author}</div>
-        <div className={classes.price}>{price}</div>
+      <div className={classes.summary}>
+        <img src={image} alt={title}></img>
+        <h3>{title}</h3>
+        <div className={classes.author}>{author}</div>
+        <div className={classes.price}>ALL {price}</div>
       </div>
-      <BookItemForm
-        id={props.id}
-        onAddToCart={addToCartHandler}
-        onAddToWishlist={addToWishlistHandler}
-      />
+      <div className={classes.actions}>
+        <input
+          value={amountValue}
+          onChange={amountHandler}
+          id={"amount_" + id}
+          type="number"
+          min={1}
+        ></input>
+        <button onClick={addToCartHandler}>Cart</button>
+        <button onClick={wishlistHandler}>{isLiked ? "Unlike" : "Like"}</button>
+      </div>
     </div>
   );
 };

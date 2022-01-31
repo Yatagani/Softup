@@ -1,41 +1,47 @@
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Fragment, useEffect } from "react";
+import { fetchBookData, fetchCartData } from "./store/http-actions";
 
 import Header from "./components/Header/Header";
 import Navbar from "./components/Navbar/Navbar";
 import Books from "./components/Books/Books";
 import Cart from "./components/Cart/Cart";
 import Wishlist from "./components/Wishlist/Wishlist";
-// import CartProvider from "./store/CartProvider";
-import BookProvider from "./store/BookProvider";
+import NewBookForm from "./components/NewBookForm/NewBookForm";
+import Notification from "./components/Notifications/Notification";
 
 function App() {
-  const [cartIsShown, setCartIsShown] = useState(false);
-  const [wishlistIsShown, setWishlistIsShown] = useState(false);
+  const showCart = useSelector((state) => state.ui.cartIsVisible);
+  const showWishlist = useSelector((state) => state.ui.wishlistIsVisible);
+  const showNewBook = useSelector((state) => state.ui.newBookIsVisible);
 
-  const showCartHandler = () => {
-    setCartIsShown(true);
-  };
+  const dispatch = useDispatch();
+  const notification = useSelector((state) => state.ui.notification);
 
-  const hideCartHandler = () => {
-    setCartIsShown(false);
-  };
+  useEffect(() => {
+    dispatch(fetchBookData());
+  }, [dispatch]);
 
-  const showWishlistHandler = () => {
-    setWishlistIsShown(true);
-  };
-
-  const hideWishlistHandler = () => {
-    setWishlistIsShown(false);
-  };
+  useEffect(() => {
+    dispatch(fetchCartData());
+  }, [dispatch]);
 
   return (
-    <BookProvider>
-      {cartIsShown && <Cart onCloseCart={hideCartHandler} />}
-      {wishlistIsShown && <Wishlist onCloseWishlist={hideWishlistHandler} />}
-      <Header onShowCart={showCartHandler} />
-      <Navbar onShowWishlist={showWishlistHandler} />
+    <Fragment>
+      {notification && (
+        <Notification
+          status={notification.status}
+          title={notification.title}
+          message={notification.message}
+        />
+      )}
+      {showCart && <Cart />}
+      {showWishlist && <Wishlist />}
+      {showNewBook && <NewBookForm />}
+      <Header />
+      <Navbar />
       <Books />
-    </BookProvider>
+    </Fragment>
   );
 }
 

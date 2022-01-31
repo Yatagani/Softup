@@ -1,43 +1,34 @@
-import { useContext } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { uiActions } from "../../store/ui-slice";
 
 import Modal from "../UI/Modal";
 import WishlistItem from "../Wishlist/WishlistItem";
 import classes from "./Wishlist.module.css";
-import BookContext from "../../store/book-context";
 
 const Wishlist = (props) => {
-  const bookCtx = useContext(BookContext);
-  console.log(bookCtx);
+  const wishlistItems = useSelector((state) => state.wishlist.items);
+  const dispatch = useDispatch();
 
-  // const isFavorite = bookCtx.wishlist.isFavorite;
-  // const hasItems = bookCtx.items.length > 0;
-
-  const wishlistItemRemoveHandler = (id) => {
-    bookCtx.wishlist.removeItem(id);
+  const closeWishlistHandler = () => {
+    dispatch(uiActions.toggleWishlist());
   };
-
-  const wishlistItemAddHandler = (item) => {
-    bookCtx.wishlist.addItem(item);
-  };
-
-  const wishlistItems = (
-    <ul className={classes["wishlist-items"]}>
-      {bookCtx.wishlist.items.map((item) => (
-        <WishlistItem
-          key={item.id}
-          title={item.title}
-          image={item.image}
-          onRemove={() => wishlistItemRemoveHandler(item.id)}
-          onAdd={() => wishlistItemAddHandler(item)}
-        />
-      ))}
-    </ul>
-  );
 
   return (
-    <Modal onClose={props.onCloseWishlist}>
-      {wishlistItems}
-      <button className={classes.button} onClick={props.onCloseWishlist}>
+    <Modal onClose={closeWishlistHandler}>
+      <ul className={classes["wishlist-items"]}>
+        {wishlistItems.map((item) => (
+          <WishlistItem
+            key={item.id}
+            item={{
+              id: item.id,
+              title: item.title,
+              image: item.image,
+              author: item.author,
+            }}
+          />
+        ))}
+      </ul>
+      <button className={classes.button} onClick={closeWishlistHandler}>
         Close
       </button>
     </Modal>
