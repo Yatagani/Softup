@@ -21,6 +21,8 @@ const wishlistSlice = createSlice({
       } else {
         const id = action.payload.id;
         state.items = state.items.filter((item) => item.id !== id);
+        // Change like button of the book with the same id
+        // state.isLiked = !state.isLiked;
       }
     },
   },

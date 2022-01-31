@@ -10,6 +10,8 @@ const Cart = (props) => {
   const totalAmount = useSelector((state) => state.cart.totalAmount);
   const totalQuantity = useSelector((state) => state.cart.totalQuantity);
   const cartItems = useSelector((state) => state.cart.items);
+  const isEmpty = totalQuantity === 0;
+
   const dispatch = useDispatch();
 
   const closeCartHandler = () => {
@@ -17,13 +19,13 @@ const Cart = (props) => {
   };
 
   const orderHandler = () => {
-    console.log("Ordered pressed");
-
     dispatch(sendCartData({ totalAmount, totalQuantity, items: cartItems }));
+    dispatch(uiActions.toggleCart());
   };
 
   return (
     <Modal onClose={closeCartHandler}>
+      {isEmpty && <h2>No items found in your cart</h2>}
       <ul className={classes["cart-items"]}>
         {cartItems.map((item) => (
           <CartItem
@@ -37,15 +39,17 @@ const Cart = (props) => {
           />
         ))}
       </ul>
-      <div className={classes.total}>
-        <span>Total Amount</span>
-        <span>{totalAmount}</span>
-      </div>
+      {!isEmpty && (
+        <div className={classes.total}>
+          <span>Total Amount</span>
+          <span>{totalAmount}</span>
+        </div>
+      )}
       <div className={classes.actions}>
         <button className={classes["button--alt"]} onClick={closeCartHandler}>
           Close
         </button>
-        <button className={classes.button} onClick={orderHandler}>
+        <button disabled={isEmpty} className={classes.button} onClick={orderHandler}>
           Order
         </button>
       </div>

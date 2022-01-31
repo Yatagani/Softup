@@ -71,7 +71,7 @@ const NewBookForm = (props) => {
       price: priceValue,
       category: "English",
       image: imagePreview,
-    }
+    };
 
     dispatch(sendBookData(newBook));
 
@@ -80,6 +80,7 @@ const NewBookForm = (props) => {
     resetPrice();
     setUploadedImage("");
     setImagePreview("");
+    dispatch(uiActions.toggleNewBook());
   };
 
   return (

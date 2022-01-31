@@ -7,7 +7,9 @@ import classes from "./Wishlist.module.css";
 
 const Wishlist = (props) => {
   const wishlistItems = useSelector((state) => state.wishlist.items);
+  const isEmpty = wishlistItems.length === 0
   const dispatch = useDispatch();
+
 
   const closeWishlistHandler = () => {
     dispatch(uiActions.toggleWishlist());
@@ -15,6 +17,7 @@ const Wishlist = (props) => {
 
   return (
     <Modal onClose={closeWishlistHandler}>
+      {isEmpty && <h2>No items found in wishlist</h2>}
       <ul className={classes["wishlist-items"]}>
         {wishlistItems.map((item) => (
           <WishlistItem

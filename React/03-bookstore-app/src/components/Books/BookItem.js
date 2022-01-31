@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { cartActions } from "../../store/cart-slice";
+import { uiActions } from "../../store/ui-slice";
 import { wishlistActions } from "../../store/wishlist-slice";
 import classes from "./BookItem.module.css";
 
@@ -9,7 +10,8 @@ const BookItem = (props) => {
   const dispatch = useDispatch();
 
   const { title, author, price, image, id } = props.item;
-  const [isLiked, setIsLiked] = useState(false);
+  // const [isLiked, setIsLiked] = useState(false);
+  const isLiked = useSelector((state) => state.ui.isLiked);
 
   const amountHandler = (event) => {
     setAmountValue(event.target.value);
@@ -35,7 +37,8 @@ const BookItem = (props) => {
         image,
       })
     );
-    setIsLiked(!isLiked);
+    // setIsLiked(!isLiked);
+    dispatch(uiActions.toggleLikeButton());
   };
 
   return (
@@ -50,7 +53,6 @@ const BookItem = (props) => {
         <input
           value={amountValue}
           onChange={amountHandler}
-          id={"amount_" + id}
           type="number"
           min={1}
         ></input>

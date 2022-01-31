@@ -13,7 +13,7 @@ const cartSlice = createSlice({
     addItemToCart(state, action) {
       const newItem = action.payload;
       const existingItem = state.items.find((item) => item.id === newItem.id);
-      state.totalAmount = state.totalAmount + newItem.amount * newItem.price;
+      state.totalAmount += newItem.amount * newItem.price;
       state.totalQuantity += +newItem.amount;
       if (!existingItem) {
         state.items.push({
@@ -30,8 +30,10 @@ const cartSlice = createSlice({
       const id = action.payload;
       const existingItem = state.items.find((item) => item.id === id);
       state.totalQuantity--;
-      state.totalAmount -= existingItem.amount * existingItem.price;
-      if (existingItem.quantity === 1) {
+      state.totalAmount -= existingItem.price;
+      
+      if (existingItem.amount === 1) {
+        console.log("Ready to delete");
         state.items = state.items.filter((item) => item.id !== id);
       } else {
         existingItem.amount--;

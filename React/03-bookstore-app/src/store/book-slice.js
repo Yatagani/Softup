@@ -3,7 +3,6 @@ import { createSlice } from "@reduxjs/toolkit";
 const defaultBookState = {
   items: [],
   category: "English",
-  changed: false,
 };
 
 const bookSlice = createSlice({
@@ -16,7 +15,6 @@ const bookSlice = createSlice({
     addNewBook(state, action) {
       const newItemKey = Object.keys(action.payload);
       const newItem = action.payload[newItemKey];
-      state.changed = true;
       state.items.push({
         id: newItem.id,
         title: newItem.title,

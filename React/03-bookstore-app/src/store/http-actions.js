@@ -29,8 +29,8 @@ export const fetchBookData = () => {
 
     try {
       const bookData = await fetchData();
-      console.log(bookData);
       dispatch(bookActions.fetchAllBooks(bookData));
+
       // Dispatch SUCCESS action
       dispatch(
         uiActions.showNotification({
@@ -84,7 +84,7 @@ export const sendBookData = (book) => {
 
     try {
       const bookData = await sendRequest();
-      console.log("My book", bookData);
+
       dispatch(bookActions.addNewBook(bookData));
       // Dispatch SUCCESS action
       dispatch(
@@ -133,9 +133,14 @@ export const fetchCartData = () => {
 
     try {
       const cartData = await fetchCart();
-      console.log(cartData);
 
-      dispatch(cartActions.fetchAllCart(cartData));
+      dispatch(
+        cartActions.fetchAllCart({
+          items: cartData.items || [],
+          totalQuantity: cartData.totalQuantity,
+          totalAmount: cartData.totalAmount,
+        })
+      );
       dispatch(
         uiActions.showNotification({
           status: "success",

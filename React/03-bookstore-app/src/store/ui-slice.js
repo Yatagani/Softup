@@ -4,6 +4,7 @@ const defaultUiState = {
   cartIsVisible: false,
   wishlistIsVisible: false,
   newBookIsVisible: false,
+  isLiked: false,
   notification: null,
 };
 
@@ -19,6 +20,9 @@ const uiSlice = createSlice({
     },
     toggleNewBook(state) {
       state.newBookIsVisible = !state.newBookIsVisible;
+    },
+    toggleLikeButton(state) {
+      state.isLiked = !state.isLiked;
     },
     showNotification(state, action) {
       state.notification = {
