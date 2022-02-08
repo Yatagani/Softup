@@ -1,2 +1,0 @@
-# softup
-Softup Internship Courses
