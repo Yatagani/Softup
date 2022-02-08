@@ -1,3 +1,3 @@
 const Test = () => {
-  console.log('Random text');
+  console.log('Random text here');
 };
